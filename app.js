@@ -6,6 +6,9 @@ const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 require('dotenv').config(); // To load environment variables from .env
 
+const { swaggerUi, swaggerDocs } = require('./swagger');
+const authRoutes = require('./routes/authRoutes');
+
 const app = express();
 
 // Middleware setup
@@ -22,10 +25,16 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
+// swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 // Sample route
 app.get('/', (req, res) => {
     res.status(200).json({ 'message': 'Welcome to the Task Manager API' });
 });
+
+// API Routes
+app.use('/api/auth', authRoutes);
 
 // 404 Handle for unknown routes
 app.use((req, res, next) => {
