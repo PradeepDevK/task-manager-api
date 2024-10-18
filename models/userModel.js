@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     role: { 
         type: String,
-        enum: ['admin', 'user'],
+        enum: ['admin', 'user', 'manager'],
         default: 'user'        
     },
     createdAt: {
@@ -39,7 +39,7 @@ userSchema.pre('save', async function (next) {
 });
 
 // method to compare passwords for login
-userSchema.methods.matchPassword =  async (enterPassword) => {
+userSchema.methods.matchPassword =  async function (enterPassword) {
     return await bcrypt.compare(enterPassword, this.password);
 }
 

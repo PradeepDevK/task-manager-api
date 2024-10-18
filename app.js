@@ -8,6 +8,8 @@ require('dotenv').config(); // To load environment variables from .env
 
 const { swaggerUi, swaggerDocs } = require('./swagger');
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -35,6 +37,8 @@ app.get('/', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/users', userRoutes);
 
 // 404 Handle for unknown routes
 app.use((req, res, next) => {

@@ -44,7 +44,7 @@ exports.registerUser = async (req, res) => {
             }
         })
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', err });
     }
 };
 
@@ -53,17 +53,23 @@ exports.registerUser = async (req, res) => {
 // @access Public
 exports.loginUser = async (req, res) => {
     const  { email, password } = req.body;
+    console.log(req.body)
 
     try {
         // Find user by email
         const user = await User.findOne({ email });
-        if (!user)
+        console.log(user);
+        if (!user) {
             return res.status(400).json({ message: 'Invalid Credentials' });
+        }
 
         // check if the password matches
         const isMatch = await user.matchPassword(password);
-        if (!isMatch)
+        console.log(isMatch)
+        console.log("isMatch", isMatch);
+        if (!isMatch) {
             return res.status(400).json({ message: 'Invalid Credentials' });
+        }
 
         // generate JWT token
         const token = generateToken(user._id);
@@ -80,6 +86,6 @@ exports.loginUser = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', err });
     }
 }

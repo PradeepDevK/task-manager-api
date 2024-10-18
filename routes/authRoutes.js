@@ -48,6 +48,10 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/User'
+ *           example:
+ *             name: John Doe
+ *             email: john@example.com
+ *             password: password123
  *     responses:
  *       201:
  *         description: The user was successfully registered
