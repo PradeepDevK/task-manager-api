@@ -1,7 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const roleMiddleware = require('../middlewares/roleMiddleware');
-const { createTask, getTasks, getTaskById, updateTaskById, deleteTask } = require('../controllers/taskController');
+const { createTask, getTasks, getTaskById, updateTaskById, deleteTask, markTaskAsComplete } = require('../controllers/taskController');
 const { validateTaskCreation, validateTaskUpdate } = require('../validators/taskValidator');
 const { validationResult } = require('express-validator');
 const router = express.Router();
@@ -23,7 +23,9 @@ const handleValidationErrors = (req, res, next) => {
  *       required:
  *         - title
  *         - description
+ *         - status
  *         - dueDate
+ *         - user
  *       properties:
  *         id:
  *           type: String
@@ -193,6 +195,33 @@ router.put('/:id', authMiddleware, roleMiddleware(['admin', 'manager']), validat
  */
 router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deleteTask);
 
-module.exports = router;
+/**
+ * @swagger
+ *   /api/tasks/{id}/complete:
+ *     patch:
+ *       summary: Mark a task as completed
+ *       tags: [Tasks]
+ *       security:
+ *         - bearerAuth: []
+ *       parameters:
+ *         - inpath:
+ *           name: id
+ *           schema:
+ *             type: string
+ *           required: true
+ *           description: The ID of the task to mark the completed
+ *     responses:
+ *       200:
+ *         description: Task marked as completed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       404:
+ *         description: Task not found 
+ *       500:
+ *         description: Server error
+ */
+router.patch('/:id/complete', authMiddleware, markTaskAsComplete);
 
 module.exports = router;

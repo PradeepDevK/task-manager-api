@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/authController');
+const { registerUser, loginUser, refreshAccessToken } = require('../controllers/authController');
 const router = express.Router();
 
 /**
@@ -97,7 +97,9 @@ router.post('/register', registerUser);
  *             schema:
  *               type: object
  *               properties:
- *                 token:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
  *                   type: string
  *                 user:
  *                   $ref: '#/components/schemas/User'
@@ -107,5 +109,37 @@ router.post('/register', registerUser);
  *         description: Server error
  */
 router.post('/login', loginUser);
+
+/**
+ * @swagger
+ *   /api/auth/refresh-token:
+ *     patch:
+ *       summary: Refresh the access token using refresh token
+ *       tags: [Auth]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 refreshToken:
+ *                   type: string
+ *       responses:
+ *         200:
+ *           description: New access token generated
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   accessToken:
+ *                     type: string
+ *         403:
+ *           description: Invalid refresh token
+ *         500:
+ *           description: Server error
+ */
+router.post('/refresh-token', refreshAccessToken);
 
 module.exports = router;
