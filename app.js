@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 require('dotenv').config(); // To load environment variables from .env
 
 const { swaggerUi, swaggerDocs } = require('./swagger');
@@ -18,6 +19,7 @@ app.use(helmet()); // Security Middleware
 app.use(cors()); // Enable Cors
 app.use(express.json()); // Parse incoming JSON requests
 app.use(morgan('dev')); // Logging
+app.use(cookieParser());
 
 // Rate limiting to prevent abuse
 const limiter = rateLimit({

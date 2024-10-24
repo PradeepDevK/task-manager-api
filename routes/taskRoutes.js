@@ -28,27 +28,27 @@ const handleValidationErrors = (req, res, next) => {
  *         - user
  *       properties:
  *         id:
- *           type: String
+ *           type: string
  *           description: The auto-generated id of the task
  *         title:
- *           type: String
+ *           type: string
  *           description: Task Title
  *         description:
- *           type: String
+ *           type: string
  *           description: Task Description
  *         status:
- *           type: String
+ *           type: string
  *           enum: [pending, in-progress, completed]
  *           description: Task Status
  *         dueDate:
- *           type: String
+ *           type: string
  *           format: date
  *           description: Due date for the task
  *         user:
- *           type: String
+ *           type: string
  *           description: The ID of the user who created the task
  *         createdAt:
- *           type: String
+ *           type: string
  *           format: date-time
  *           description: Task creation timestamp
  */
@@ -56,7 +56,7 @@ const handleValidationErrors = (req, res, next) => {
 
 /**
  * @swagger
- * /api/tasks:
+ * /tasks:
  *   post:
  *     summary: Create a new task
  *     tags: [Tasks]
@@ -67,7 +67,12 @@ const handleValidationErrors = (req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
- *             #ref: '#/components/schemas/Task'
+ *             $ref: '#/components/schemas/Task'
+ *           example:
+ *             title: Create Job Scheduler
+ *             description: Scheduler for workflow execution
+ *             status: pending
+ *             dueDate: 2024-10-24
  *     responses:
  *       201:
  *         description: Task created successfully
@@ -84,7 +89,7 @@ router.post('/', authMiddleware, validateTaskCreation, handleValidationErrors, c
 
 /**
  * @swagger
- * /api/tasks:
+ * /tasks:
  *   get:
  *     summary: Get all tasks for the logged in user
  *     tags: [Tasks]
@@ -106,7 +111,7 @@ router.get('/', authMiddleware, getTasks);
 
 /**
  * @swagger
- * /api/tasks/{id}:
+ * /tasks/{id}:
  *   get:
  *     summary: Get a task by ID
  *     tags: [Tasks]
@@ -135,7 +140,7 @@ router.get('/:id', authMiddleware, getTaskById);
 
 /**
  * @swagger
- * /api/tasks/{id}:
+ * /tasks/{id}:
  *   put:
  *     summary: Update a task by ID (admin, manager only)
  *     tags: [Tasks]
@@ -172,7 +177,7 @@ router.put('/:id', authMiddleware, roleMiddleware(['admin', 'manager']), validat
 
 /**
  * @swagger
- * /api/tasks/{id}:
+ * /tasks/{id}:
  *   delete:
  *     summary: Delete a task by ID (admin only)
  *     tags: [Tasks]
@@ -197,7 +202,7 @@ router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deleteTask);
 
 /**
  * @swagger
- *   /api/tasks/{id}/complete:
+ *   /tasks/{id}/complete:
  *     patch:
  *       summary: Mark a task as completed
  *       tags: [Tasks]

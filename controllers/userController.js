@@ -28,7 +28,7 @@ const updateUserRole = async (req, res) => {
     }
 };
 
-// @route GET /api/users
+// @route GET /api/users/
 // @desc Get all users (admin only)
 // @access Private (admin only)
 const getAllusers = async (req, res) => {

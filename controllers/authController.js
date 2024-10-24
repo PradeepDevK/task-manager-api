@@ -13,12 +13,12 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 // Generate an Access Token
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user._id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 15 mins expiration
+    return jwt.sign({ id: user._id, role: user.role }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 15 mins expiration
 };
 
 // Generate a Refresh Token
 const generateRefreshToken = (user) => {
-    return jwt.sign({ id: user._id}, REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); // 7 days expiration
+    return jwt.sign({ id: user._id, role: user.role }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); // 7 days expiration
 };
 
 // @desc Register new user
@@ -124,7 +124,7 @@ exports.loginUser = async (req, res) => {
 // @route /api/auth/refresh-token
 // @access Private
 exports.refreshAccessToken = (req, res) => {
-    const refreshToken = req.cookies.refreshToke || req.body.refreshToken; // Retrieve the refresh token
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken; // Retrieve the refresh token
 
     if (!refreshToken) {
         return res.status(403).json({ message: 'Refresh token required' });

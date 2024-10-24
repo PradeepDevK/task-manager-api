@@ -36,7 +36,7 @@ router.put('/role', authMiddleware, roleMiddleware(['admin']), updateUserRole);
 
 /**
  * @swagger
- * /api/users:
+ * /users:
  *   get:
  *     summary: Get all users (admin only)
  *     tags: [Users]
@@ -54,7 +54,7 @@ router.get('/', authMiddleware, roleMiddleware(['admin']), getAllusers);
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   get:
  *     summary: Get a user by ID (admin only)
  *     tags: [Users]

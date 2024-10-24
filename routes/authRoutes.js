@@ -112,8 +112,8 @@ router.post('/login', loginUser);
 
 /**
  * @swagger
- *   /api/auth/refresh-token:
- *     patch:
+ *   /auth/refresh-token:
+ *     post:
  *       summary: Refresh the access token using refresh token
  *       tags: [Auth]
  *       requestBody:

@@ -17,7 +17,7 @@ exports.createTask = async (req, res) => {
             title,
             description,
             dueDate,
-            user: req.user, // User from the authMiddleware
+            user: req.user.id, // User from the authMiddleware
         });
 
         await task.save();
@@ -27,7 +27,7 @@ exports.createTask = async (req, res) => {
             task,
         });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error });
     }
 }
 
@@ -36,10 +36,11 @@ exports.createTask = async (req, res) => {
 // @access Private
 exports.getTasks = async (req, res) => {
     try {
-        const tasks = await Task.find({ user: req.user }); // Get tasks for the logged-in user
+        let filterQuery = (req.user.role === 'admin') ? {} : { user: req.user.id };
+        const tasks = await Task.find(filterQuery); // Get tasks for the logged-in user
         res.status(200).json({ data: tasks });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ message: 'Server error', error });
     }
 };
 
@@ -50,7 +51,7 @@ exports.getTaskById = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id); // Get task by task id
 
-        if (!task || task.user.toString() !== req.user) {
+        if (!task || task.user.toString() !== req.user.id) {
             return res.status(404).json({ message: 'Task not found' });
         }
 
@@ -71,7 +72,7 @@ exports.updateTaskById = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
 
-        if (!task || task.user.toString() !== req.user) {
+        if (!task || task.user.toString() !== req.user.id) {
             return res.status(404).json({ message: 'Task not found' });
         }
 
@@ -102,7 +103,7 @@ exports.deleteTask = async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
 
-        if (!task || task.user.toString() !== req.user) {
+        if (!task || task.user.toString() !== req.user.id) {
             return res.status(404).json({ message: 'Task not found' });
         }
 
