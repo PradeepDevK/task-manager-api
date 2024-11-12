@@ -1,13 +1,13 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const roleMiddleware = require('../middlewares/roleMiddleware');
-const { updateUserRole, updateUserProfile, getAllusers, getUserById, deleteUserById } = require('../controllers/userController');
+const { updateUserRole, updateUserProfile, getAllusers, getUserById, deleteUserById, addNewUserProfile } = require('../controllers/userController');
 
 const router = express.Router();
 
 /**
  * @swagger
- * /users/role:
+ * /api/users/role:
  *   put:
  *     summary: Update a user's role (admin only)
  *     tags: [Users]
@@ -36,7 +36,7 @@ router.put('/role', authMiddleware, roleMiddleware(['admin']), updateUserRole);
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Get all users (admin only)
  *     tags: [Users]
@@ -54,7 +54,7 @@ router.get('/', authMiddleware, roleMiddleware(['admin']), getAllusers);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Get a user by ID (admin only)
  *     tags: [Users]
@@ -108,25 +108,22 @@ router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deleteUserById)
 
 /**
  * @swagger
- *   /api/users/profile:
- *     put:
- *       summary: Update a user profile (all users)
- *       tags: [Users]
- *       security:
- *         - bearerAuth: []
+ * /api/users/profile:
+ *   put:
+ *     summary: Update a user profile (all users)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *           properties:
- *             name:
- *               type: string
- *             email:
- *               type: string
- *             password:
- *               type: string
+ *             $ref: '#/components/schemas/User'
+ *           example:
+ *             name: John Doe
+ *             email: john@example.com
+ *             password: password123
  *     responses:
  *       200:
  *         description: User profile updated successfully
@@ -138,5 +135,35 @@ router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deleteUserById)
  *         description: Server error
  */
 router.put('/profile', authMiddleware, updateUserProfile);
+
+/**
+ * @swagger
+ * /api/users/profile:
+ *   post:
+ *     summary: Add a new user profile (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *           example:
+ *             name: John Doe
+ *             email: john@example.com
+ *             password: password123
+ *     responses:
+ *       200:
+ *         description: User profile created successfully
+ *       403:
+ *         description: Access denied (admin only)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+router.post('/profile', authMiddleware, roleMiddleware(['admin']), addNewUserProfile);
 
 module.exports = router;
